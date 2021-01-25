@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser  # User可以删除，因为下面创建了新的User模型
+from django.contrib.auth.models import User, AbstractUser  # User可以删除，因为下面创建了  
 
 
 # Create your models here.
