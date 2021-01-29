@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <!-- 网站标题 -->
     <title>首页</title>
+    {% load static %}
     <!-- 引入bootstrap的css文件 -->
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <!-- 引入monikai.css -->
@@ -28,7 +29,7 @@
     <div class="container">
         <!-- 导航栏商标 -->
         <div>
-            <a class="navbar-brand" href="./index.html">个人博客</a>
+            <a class="navbar-brand" href="{% url 'home:index' %}">个人博客</a>
         </div>
         <!-- 分类 -->
         <div class="collapse navbar-collapse">
@@ -57,14 +58,14 @@
                 <li class="nav-item dropdown" v-if="is_login">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="show_menu_click">[[username]]</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="display: block" v-show="show_menu">
-                        <a class="dropdown-item" href="../static/write_blog.html">写文章</a>
-                        <a class="dropdown-item" href='../static/center.html'>个人信息</a>
-                        <a class="dropdown-item" href='#'>退出登录</a>
+                        <a class="dropdown-item" href="write_blog.html">写文章</a>
+                        <a class="dropdown-item" href='./center.html'>个人信息</a>
+                        <a class="dropdown-item" href='{% url 'users:logout' %}'>退出登录</a>
                     </div>
                 </li>
                 <!-- 如果用户未登录，则显示登录按钮 -->
                 <li class="nav-item" v-else>
-                    <a class="nav-link" href="login.html">登录</a>
+                    <a class="nav-link" href="{% url 'users:login' %}">登录</a>
                 </li>
             </ul>
         </div>

@@ -1,5 +1,6 @@
 import re
 
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -238,4 +239,15 @@ class LoginView(View):
             response.set_cookie('is_login', True, max_age=14 * 24 * 3600)
             response.set_cookie('username', user.username, max_age=14 * 24 * 3600)
         # 7.返回响应
+        return response
+
+
+class LogoutView(View):
+    def get(self, request):
+        # 1.session数据清除
+        logout(request)
+        # 2.删除部分cookie数据
+        response = redirect(reverse('home:index'))
+        response.delete_cookie('is_login')
+        # 3.跳转到首页
         return response
