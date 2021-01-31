@@ -251,3 +251,66 @@ class LogoutView(View):
         response.delete_cookie('is_login')
         # 3.跳转到首页
         return response
+
+
+class ForgetPasswordView(View):
+    def get(self, request):
+        return render(request, 'forget_password.html')
+
+    def post(self, request):
+        """
+        1.获取参数
+        2.参数校验
+            2.1判断参数齐全
+            2.2手机号是否符合规则
+            2.3密码是否符合规则
+            2.4密码与确认密码是否一致
+            2.5判断短信验证码是否正确
+        3.根据手机号进行用户信息查询
+        4.如果查询出用户信息则修改
+        5.如果没有查询到信息，则新用户创建
+        6.可以进行页面的跳转
+        7.返回响应
+        """
+        # 1.获取参数
+        mobile = request.POST.get('mobile')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        smscode = request.POST.get('sms_code')
+        # 2.参数校验
+        #   2.1判断参数齐全
+        if not all([mobile, password, password2, smscode]):
+            return HttpResponseBadRequest('缺少必要的参数')
+            #   2.2手机号格式是否正确
+        if not re.match(r'^1[3-9]\d{9}$', mobile):
+            return HttpResponseBadRequest('手机号不符合规则')
+            #   2.3密码是否符合格式
+        if not re.match(r'^[0-9A-Za-z]{8,20}$', mobile):
+            return HttpResponseBadRequest('手机号不符合规则')
+            #   2.4密码确认密码一致
+        if password != password2:
+            return HttpResponseBadRequest('密码不一致')
+            # 2.5判断短信验证码是否正确
+        redis_conn = get_redis_connection('default')
+        redis_sms_code = redis_conn.get('sms:%s' % mobile)
+        if redis_sms_code is None:
+            return HttpResponseBadRequest('短信验证码过期')
+        if redis_sms_code.decode() != smscode:
+            return HttpResponseBadRequest('短信验证码错误')
+        # 3.根据手机号进行用户信息查询
+        try:
+            user = User.objects.get(mobile=mobile)
+        except User.DoesNotExist:
+            # 5.如果没有查询到信息，则新用户创建
+            try:
+                User.objects.create_user(username=mobile, mobile=mobile, password=password)
+            except Exception:
+                return HttpResponseBadRequest('修改失败，平稍后再试')
+        else:
+            # 4.如果查询出用户信息则修改
+            user.set_password(password)
+            user.save()
+        # 6.可以进行页面的跳转
+        response = redirect(reverse('users:login'))
+        # 7.返回响应
+        return response
