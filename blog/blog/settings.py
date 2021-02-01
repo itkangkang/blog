@@ -63,7 +63,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'builtins': [ #可以在html文件中路径直接使用{% %}
+            'builtins': [  # 可以在html文件中路径直接使用{% %}
                 'django.templatetags.static'
             ],
         },
@@ -196,3 +196,9 @@ AUTH_USER_MODEL = 'users.User'
 
 # 系统的默认跳转
 LOGIN_URL = '/login/'
+
+# 设置上传的图片保存到media目录
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+#设置图片给访问的同意路由
+MEDIA_URL='/media/'

@@ -339,7 +339,37 @@ class UserCenterView(LoginRequiredMixin, View):
         context = {
             'username': user.username,
             'mobile': user.mobile,
-            'avatar': user.avatar,
+            'avatar': user.avatar.url if user.avatar else None,
             'user_desc': user.user_desc,
         }
-        return render(request, 'center.html')
+        return render(request, 'center.html', context=context)
+
+    def post(self, request):
+        """
+        1.接受参数
+        2.将参数保存
+        3.更新一下cookie信息username
+        4.刷新当前页面（重定向）
+        5.返回响应
+        """
+        # 1.接受参数
+        user = request.user
+        username = request.POST.get('username', user.username)  # 第一个参数为表单提交，第二个是当表单没有提交,为之前的值
+        user_desc = request.POST.get('desc', user.user_desc)
+        avatar = request.FILES.get('avatar')
+        # 2.将参数保存
+        try:
+            user.username = username
+            user.user_desc = user_desc
+            if avatar:
+                user.avatar = avatar
+            user.save()
+        except Exception as e:
+            logger.error(e)
+            return HttpResponseBadRequest('修改失败，请稍后再试')
+        # 3.更新一下cookie信息username
+        # 4.刷新当前页面（重定向）
+        response = redirect(reverse('users:center'))
+        response.set_cookie('username', user.username, max_age=14 * 3600 * 24)
+        # 5.返回响应
+        return response
