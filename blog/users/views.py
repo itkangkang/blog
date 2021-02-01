@@ -227,7 +227,12 @@ class LoginView(View):
         login(request, user)
         # 5.根据用户选择的是否记住登陆状态判断
         # 6.为了首页显示需要设置一些cookie信息
-        response = redirect(reverse('home:index'))
+        # 根据next参数进行页面跳转
+        next_page = request.GET.get('next')
+        if next_page:
+            response = redirect(next_page)
+        else:
+            response = redirect(reverse('home:index'))
         if remember != 'on':  # 没有记住
             # 浏览器关闭后
             request.session.set_expiry(0)
@@ -314,3 +319,27 @@ class ForgetPasswordView(View):
         response = redirect(reverse('users:login'))
         # 7.返回响应
         return response
+
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+# LoginRequiredMixin
+# 如果用户未登录，则会默认跳转
+# 默认跳转链接：accounts/login/?next=xxx    可以去settings.py中修改
+class UserCenterView(LoginRequiredMixin, View):
+    def get(self, request):
+        # if request.user.is_authenticated:#如果登录返回true
+        #     return render(request, 'center.html')
+        # else:
+        #     return render(request,'login.html')
+        # 获取登录用户信息
+        user = request.user
+        # 组织获取用户的信息
+        context = {
+            'username': user.username,
+            'mobile': user.mobile,
+            'avatar': user.avatar,
+            'user_desc': user.user_desc,
+        }
+        return render(request, 'center.html')

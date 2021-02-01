@@ -63,7 +63,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'builtins': [
+            'builtins': [ #可以在html文件中路径直接使用{% %}
                 'django.templatetags.static'
             ],
         },
@@ -193,3 +193,6 @@ LOGGING = {
 # 替换系统的User来使用我们自己定义的User
 # 配置信息 为 ‘子应用名.模型类名’
 AUTH_USER_MODEL = 'users.User'
+
+# 系统的默认跳转
+LOGIN_URL = '/login/'

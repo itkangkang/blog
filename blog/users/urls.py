@@ -1,6 +1,6 @@
 # 主要是用于users子应用路由
 from django.urls import path
-from users.views import RegisterView, ImageCodeView, SmsCodeView, LoginView, LogoutView, ForgetPasswordView
+from users.views import RegisterView, ImageCodeView, SmsCodeView, LoginView, LogoutView, ForgetPasswordView, UserCenterView
 
 urlpatterns = [
     # path的第一个参数：路由
@@ -15,6 +15,8 @@ urlpatterns = [
     # 登出路由
     path('logout/', LogoutView.as_view(), name='logout'),
     # 忘记密码路由
-    path('forgetpassword/', ForgetPasswordView.as_view(), name='forgetpassword')
+    path('forgetpassword/', ForgetPasswordView.as_view(), name='forgetpassword'),
+# 用户中心路由
+    path('center/', UserCenterView.as_view(), name='center'),
 
 ]
