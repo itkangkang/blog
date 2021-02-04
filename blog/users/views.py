@@ -375,7 +375,7 @@ class UserCenterView(LoginRequiredMixin, View):
         return response
 
 
-from home.models import ArticleCategory
+from home.models import ArticleCategory,Article
 
 
 class WriteBlogView(LoginRequiredMixin, View):
@@ -394,3 +394,43 @@ class WriteBlogView(LoginRequiredMixin, View):
             'categories': categories
         }
         return render(request, 'write_blog.html', context=context)
+
+    def post(self, request):
+        """
+        1.接受数据
+        2.校验数据
+        3.数据入库
+        4.跳转到指定页面（暂时首页）
+        """
+        # 1.接受数据
+        avatar = request.FILES.get('avatar')
+        title = request.POST.get('title')
+        category_id = request.POST.get('category')
+        tags = request.POST.get('tags')
+        sumary = request.POST.get('sumary')
+        content = request.POST.get('content')
+        user = request.user
+        # 2.校验数据
+        # 2.1验证参数齐全
+        if not all([avatar, title, category_id, sumary, content]):
+            return HttpResponseBadRequest('参数不全')
+        # 2.2判断分类id
+        try:
+            category = ArticleCategory.objects.get(id=category_id)
+        except ArticleCategory.DoesNotExist:
+            return HttpResponseBadRequest('没有改分类')
+        # 3.数据入库
+        try:
+            article=Article.objects.create(
+                author=user,
+                avatar=avatar,
+                category=category,
+                tags=tags,
+                sumary=sumary,
+                content=content
+            )
+        except Exception as e:
+            logger.error(e)
+            return HttpResponseBadRequest('发布失败，稍后重试')
+        # 4.跳转到指定页面（暂时首页）
+        return redirect(reverse('home:index'))

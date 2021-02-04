@@ -21,3 +21,52 @@ class ArticleCategory(models.Model):
         db_table='tb_category' #修改表名
         verbose_name='类别管理' #admin站点显示
         verbose_name_plural=verbose_name
+
+
+from users.models import User
+from django.utils import timezone
+class Article(models.Model):
+    """
+    作者
+    标题图
+    标题
+    分类
+    标签
+    摘要
+    正文
+    浏览量
+    评论量
+    创建时间
+    修改时间
+    """
+    # 作者
+    author=models.ForeignKey(User,on_delete=models.CASCADE)
+    # 标题图
+    avatar=models.ImageField(upload_to='article/%Y%m%d/',blank=True)
+    # 标题
+    title=models.CharField(max_length=20,blank=True)
+    # 分类
+    category=models.ForeignKey(ArticleCategory,null=True,blank=True,on_delete=models.CASCADE)
+    # 标签
+    tags=models.CharField(max_length=20,blank=True)
+    # 摘要
+    sumary=models.CharField(max_length=200,null=True,blank=True)
+    # 正文
+    content=models.TextField()
+    # 浏览量
+    total_views=models.PositiveIntegerField(default=0)
+    # 评论量
+    comments_count=models.PositiveIntegerField(default=0)
+    # 创建时间
+    created=models.DateTimeField(default=timezone.now())
+    # 修改时间
+    updated=models.DateTimeField(auto_now=True)#或者default=timezone.now()
+
+    # 修改表名admin后台展示
+    class Meta:
+        db_table='tb_article'
+        ordering=('-created',)
+        verbose_name='文章管理'
+        verbose_name_plural=verbose_name
+    def __str__(self):
+        return self.title
