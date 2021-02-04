@@ -373,3 +373,24 @@ class UserCenterView(LoginRequiredMixin, View):
         response.set_cookie('username', user.username, max_age=14 * 3600 * 24)
         # 5.返回响应
         return response
+
+
+from home.models import ArticleCategory
+
+
+class WriteBlogView(LoginRequiredMixin, View):
+    def get(self, request):
+        # 查询所有分类模型
+        categories = ArticleCategory.objects.all()
+
+        # 获取登录用户信息
+        # user = request.user
+        # 组织获取用户的信息
+        context = {
+            # 'username': user.username,
+            # 'mobile': user.mobile,
+            # 'avatar': user.avatar.url if user.avatar else None,
+            # 'user_desc': user.user_desc,
+            'categories': categories
+        }
+        return render(request, 'write_blog.html', context=context)
