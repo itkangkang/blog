@@ -375,7 +375,7 @@ class UserCenterView(LoginRequiredMixin, View):
         return response
 
 
-from home.models import ArticleCategory,Article
+from home.models import ArticleCategory, Article
 
 
 class WriteBlogView(LoginRequiredMixin, View):
@@ -421,7 +421,7 @@ class WriteBlogView(LoginRequiredMixin, View):
             return HttpResponseBadRequest('没有改分类')
         # 3.数据入库
         try:
-            article=Article.objects.create(
+            article = Article.objects.create(
                 author=user,
                 avatar=avatar,
                 category=category,

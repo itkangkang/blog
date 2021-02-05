@@ -8,23 +8,25 @@ class ArticleCategory(models.Model):
     """
     文章分类
     """
-    #分类标题
-    title=models.CharField(max_length=100,blank=True)
-    #分类的创建时间
-    created=models.DateTimeField(default=timezone.now)
+    # 分类标题
+    title = models.CharField(max_length=100, blank=True)
+    # 分类的创建时间
+    created = models.DateTimeField(default=timezone.now)
 
-    #admin站点显示，调试查看方便
+    # admin站点显示，调试查看方便
     def __str__(self):
         return self.title
 
     class Meta:
-        db_table='tb_category' #修改表名
-        verbose_name='类别管理' #admin站点显示
-        verbose_name_plural=verbose_name
+        db_table = 'tb_category'  # 修改表名
+        verbose_name = '类别管理'  # admin站点显示
+        verbose_name_plural = verbose_name
 
 
 from users.models import User
 from django.utils import timezone
+
+
 class Article(models.Model):
     """
     作者
@@ -40,33 +42,34 @@ class Article(models.Model):
     修改时间
     """
     # 作者
-    author=models.ForeignKey(User,on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     # 标题图
-    avatar=models.ImageField(upload_to='article/%Y%m%d/',blank=True)
+    avatar = models.ImageField(upload_to='article/%Y%m%d/', blank=True)
     # 标题
-    title=models.CharField(max_length=20,blank=True)
+    title = models.CharField(max_length=20, blank=True)
     # 分类
-    category=models.ForeignKey(ArticleCategory,null=True,blank=True,on_delete=models.CASCADE)
+    category = models.ForeignKey(ArticleCategory, null=True, blank=True, on_delete=models.CASCADE)
     # 标签
-    tags=models.CharField(max_length=20,blank=True)
+    tags = models.CharField(max_length=20, blank=True)
     # 摘要
-    sumary=models.CharField(max_length=200,null=True,blank=True)
+    sumary = models.CharField(max_length=200, null=True, blank=True)
     # 正文
-    content=models.TextField()
+    content = models.TextField()
     # 浏览量
-    total_views=models.PositiveIntegerField(default=0)
+    total_views = models.PositiveIntegerField(default=0)
     # 评论量
-    comments_count=models.PositiveIntegerField(default=0)
+    comments_count = models.PositiveIntegerField(default=0)
     # 创建时间
-    created=models.DateTimeField(default=timezone.now())
+    created = models.DateTimeField(default=timezone.now())
     # 修改时间
-    updated=models.DateTimeField(auto_now=True)#或者default=timezone.now()
+    updated = models.DateTimeField(auto_now=True)  # 或者default=timezone.now()
 
     # 修改表名admin后台展示
     class Meta:
-        db_table='tb_article'
-        ordering=('-created',)
-        verbose_name='文章管理'
-        verbose_name_plural=verbose_name
+        db_table = 'tb_article'
+        ordering = ('-created',)
+        verbose_name = '文章管理'
+        verbose_name_plural = verbose_name
+
     def __str__(self):
         return self.title
