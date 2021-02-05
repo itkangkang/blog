@@ -55,7 +55,7 @@
             <ul class="nav navbar-nav">
                 <!-- 如果用户已经登录，则显示用户名下拉框 -->
                 <li class="nav-item dropdown" v-if="is_login">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="show_menu_click">[[username]]</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="show_menu_click">[[ username ]]</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="display: block" v-show="show_menu">
                         <a class="dropdown-item" href="{% url 'users:writeblog' %}">写文章</a>
                         <a class="dropdown-item" href='{% url 'users:center' %}'>个人信息</a>
@@ -89,7 +89,7 @@
                 </span>
                 <!-- 标题 -->
                 <h4>
-                    <b><a href="../static/detail.html" style="color: black;">{{article.title}}</a></b>
+                    <b><a href="{% url 'home:detail' %}?id={{ article.id }}" style="color: black;">{{article.title}}</a></b>
                 </h4>
                 <!-- 摘要 -->
                 <div>
@@ -101,7 +101,7 @@
                 <p>
                     <!-- 查看、评论、时间 -->
                     <span><i class="fas fa-eye" style="color: lightskyblue;"></i>{{article.total_views}}</span>
-                    <span><i class="fas fa-comments" style="color: yellowgreen;"></i>{{article.conmments_count}}</span>
+                    <span><i class="fas fa-comments" style="color: yellowgreen;"></i>{{article.comments_count}}</span>
                     <span><i class="fas fa-clock" style="color: pink;"></i>{{ article.created|date }}</span>
                 </p>
             </div>
