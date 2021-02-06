@@ -1,13 +1,14 @@
 import re
 
 from django.contrib.auth import logout
-from django.shortcuts import render, redirect
 
-# Create your views here.
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from django.views import View
 from users.models import User
+# Create your views here.
+
 from django.db import DatabaseError
 
 
